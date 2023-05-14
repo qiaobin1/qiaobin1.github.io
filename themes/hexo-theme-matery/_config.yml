@@ -88,7 +88,7 @@ music:
   type: playlist    #require song, playlist, album, search, artist
   id: 503838841     #require	song id / playlist id / album id / search keyword
   fixed: true       # 开启吸底模式
-  autoplay: false   # 是否自动播放
+  autoplay: true   # 是否自动播放
   theme: '#42b983'
   loop: 'all'       # 音频循环播放, 可选值: 'all', 'one', 'none'
   order: 'random'   # 音频循环顺序, 可选值: 'list', 'random'
@@ -311,9 +311,18 @@ mySkills:
 myGallery:
   enable: true
   data:
-    - /medias/featureimages/0.jpg
-    - /medias/featureimages/1.jpg
-    - /medias/featureimages/2.jpg
+    - /medias/images/终端转子系统远程设置上位机设备管理.jpg
+    - /medias/images/终端转子系统远程设置上位机设备监控.jpg
+    - /medias/images/终端转子系统远程设置上位机数据分析.jpg
+    - /medias/images/终端转子系统远程设置上位机故障制停.jpg
+    - /medias/images/终端转子系统远程设置上位机PHM.jpg
+    - /medias/images/飞机起落架载荷预测和疲劳评估系统.jpg
+    - /medias/images/渐开线花键承载能力.jpg
+    - /medias/images/齿轮承载能力.jpg
+    - /medias/images/有限元仿真计算平台登录界面.jpg
+    - /medias/images/飞机故障诊断登录界面.jpg
+    - /medias/images/西北工业大学第十五届工业工程改善创意大赛.jpg
+    
 
 # Whether to display post-calender in the `archive` page
 # 设置在归档页面中是否显示'文章日历'控件
