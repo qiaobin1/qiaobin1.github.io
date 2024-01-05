@@ -1,0 +1,1211 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="2023年3月版联邦学习（fate）从主机安装到实现联邦学习, Blog">
+    <meta name="description" content="单机版提供3种部署方式，这里选择在主机中安装FATE（官方建议使用Docker镜像，但不熟悉Docker的人容易找不到FATE路径）">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>2023年3月版联邦学习（fate）从主机安装到实现联邦学习 | Blog</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Blog" type="application/atom+xml">
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">Blog</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  <li>
+    <a href="javascript:;" class="waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">Blog</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">2023年3月版联邦学习（fate）从主机安装到实现联邦学习</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0/">
+                                <span class="chip bg-color">联邦学习</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category">
+                                深度学习
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2023-03-23
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2023-03-23
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    2.2k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    9 分
+                </div>
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.min.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="一、单机部署"><a href="#一、单机部署" class="headerlink" title="一、单机部署"></a>一、单机部署</h2><p>单机版提供3种部署方式，这里选择在<strong>主机中安装FATE</strong>（官方建议使用Docker镜像，但不熟悉Docker的人容易找不到FATE路径）</p>
+<h3 id="1-1虚拟机配置"><a href="#1-1虚拟机配置" class="headerlink" title="1.1虚拟机配置"></a>1.1虚拟机配置</h3><p>使用<strong>虚拟机VMware</strong>进行实验，实验过程中随时<strong>拍摄快照</strong>，节约重装时间。</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>虚拟机配置</td>
+<td>内存4G + 硬盘150G</td>
+</tr>
+<tr>
+<td>操作系统</td>
+<td>centos 7</td>
+</tr>
+</tbody></table>
+<h3 id="1-2安装python"><a href="#1-2安装python" class="headerlink" title="1.2安装python"></a>1.2安装python</h3><ul>
+<li>这里不重复写了，请参考（Ubuntu安装python）（CentOS安装python）</li>
+<li>或者安装anconda–linux版本</li>
+</ul>
+<h3 id="1-3端口检查"><a href="#1-3端口检查" class="headerlink" title="1.3端口检查"></a>1.3端口检查</h3><p>检查端口8080、9360、9380是否被占用</p>
+<pre class="line-numbers language-linux" data-language="linux"><code class="language-linux">netstat -apln|grep 8080
+netstat -apln|grep 9360
+netstat -apln|grep 9380<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="1-4获取安装包，并解压"><a href="#1-4获取安装包，并解压" class="headerlink" title="1.4获取安装包，并解压"></a>1.4获取安装包，并解压</h3><pre class="line-numbers language-linux" data-language="linux"><code class="language-linux">sudo wget https://webank-ai-1251170195.cos.ap-guangzhou.myqcloud.com/fate/1.8.0/release/standalone_fate_install_1.8.0_release.tar.gz --no-check-certificate
+tar -xzvf standalone_fate_install_1.8.0_release.tar.gz<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h3 id="1-5安装"><a href="#1-5安装" class="headerlink" title="1.5安装"></a>1.5安装</h3><ul>
+<li>进入解压后的目录并使用init.sh进行安装</li>
+<li>该脚本将自动完成：<br>安装必要的操作系统依赖包<br>安装python36环境<br>安装pypi依赖包<br>安装jdk环境<br>配置FATE环境变量脚本<br>配置fateflow<br>配置fateboard<br>安装fate client<pre class="line-numbers language-linux" data-language="linux"><code class="language-linux">cd standalone_fate_install_1.8.0_release
+bash init.sh init<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+</ul>
+<h3 id="1-6启动"><a href="#1-6启动" class="headerlink" title="1.6启动"></a>1.6启动</h3><pre class="line-numbers language-linux" data-language="linux"><code class="language-linux">bash init.sh status
+bash init.sh start<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>加载环境变量</p>
+<pre class="line-numbers language-linux" data-language="linux"><code class="language-linux">source bin/init_env.sh	<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="1-7测试"><a href="#1-7测试" class="headerlink" title="1.7测试"></a>1.7测试</h3><p>部署成功后，通过<strong>网页</strong>访问 <strong>localhost:8080</strong> 可以进入<strong>FATE Board</strong>页面，<strong>账号密码</strong>默认为：<strong>admin</strong></p>
+<p>返回终端，开始测试</p>
+<ul>
+<li>Toy测试<pre class="line-numbers language-linux" data-language="linux"><code class="language-linux">flow test toy -gid 10000 -hid 10000<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+</ul>
+<ol>
+<li><p>如果成功，屏幕显示类似下方的语句:<br>success to calculate secure_sum, it is 2000.0（我的显示的为1999.999999999）</p>
+</li>
+<li><p>之后进入<strong>FATE Broad</strong>，点击右上角<strong>JOBS</strong>，看到任务栏出现<strong>两项任务</strong>，并且状态为<strong>success</strong>则说明成功。</p>
+</li>
+</ol>
+<ul>
+<li>单元测试<pre class="line-numbers language-linux" data-language="linux"><code class="language-linux">fate_test unittest federatedml --yes<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+如果成功，屏幕显示类似下方的语句:</li>
+</ul>
+<p>there are 0 failed test</p>
+<h3 id="1-8安装FATE-Client、FATE-Test、FATE-Flow、jupyter-notebook"><a href="#1-8安装FATE-Client、FATE-Test、FATE-Flow、jupyter-notebook" class="headerlink" title="1.8安装FATE-Client、FATE-Test、FATE-Flow、jupyter notebook"></a>1.8安装FATE-Client、FATE-Test、FATE-Flow、jupyter notebook</h3><h4 id="1-8-1FATE-Client、FATE-Test"><a href="#1-8-1FATE-Client、FATE-Test" class="headerlink" title="1.8.1FATE-Client、FATE-Test"></a>1.8.1FATE-Client、FATE-Test</h4><ul>
+<li>为方便使用FATE，安装便捷的<strong>交互工具FATE-Client</strong>以及<strong>测试工具FATE-Test</strong>.</li>
+<li>请在环境内使用以下指令安装：<pre class="line-numbers language-linux" data-language="linux"><code class="language-linux">python -m pip install fate-client
+python -m pip install fate-test<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+</ul>
+<h4 id="1-8-2FATE-Flow"><a href="#1-8-2FATE-Flow" class="headerlink" title="1.8.2FATE-Flow"></a>1.8.2FATE-Flow</h4><ul>
+<li>安装FATE-Client的过程会<strong>安装好FATE-Flow</strong>，这个工具是联邦学习端到端流水线的多方联邦任务安全调度平台，<strong>是执行任务的核心</strong></li>
+<li>初始化<pre class="line-numbers language-linux" data-language="linux"><code class="language-linux">flow init --ip 127.0.0.1 --port 9380<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+</ul>
+<h4 id="1-8-3FATE中的Jupyter-Notebook"><a href="#1-8-3FATE中的Jupyter-Notebook" class="headerlink" title="1.8.3FATE中的Jupyter Notebook"></a>1.8.3FATE中的Jupyter Notebook</h4><p><a target="_blank" rel="noopener" href="https://www.sohu.com/a/443726505_609552">参考：在Juypter Notebook中构建联邦学习任务</a></p>
+<p>上边如果安装anaconda的则只需要执行下方第二步</p>
+<ul>
+<li>安装jupyter notebook<pre class="line-numbers language-linux" data-language="linux"><code class="language-linux">pip install notebook fate-client<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+启动 <strong>Juypter Notebook 服务并监听 20000 端口</strong>，待服务启动完毕后则可以通过的方式 “IP：Port” 的方式访问 Notebook<pre class="line-numbers language-linux" data-language="linux"><code class="language-linux">
+jupyter notebook --ip=0.0.0.0 --port=20000 --allow-root --debug --no-browser --NotebookApp.token= ''--NotebookApp.password= ''<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+<li>保持终端运行的状态，可以通过”IP：Port”的方式访问Juypter Notebook，此时notebook中的目录，就是Ubuntu中fate安装目录下的内容（按本教程的安装过程，fate根目录位于/home/fate/standalone_fate_master_1.8.0/）</li>
+</ul>
+<h2 id="二、用FATE从零实现横向逻辑回归"><a href="#二、用FATE从零实现横向逻辑回归" class="headerlink" title="二、用FATE从零实现横向逻辑回归"></a>二、用FATE从零实现横向逻辑回归</h2><p>在开始本章之前，请确保已经安装Python和FATE单机版</p>
+<h3 id="2-1-数据集获取"><a href="#2-1-数据集获取" class="headerlink" title="2.1 数据集获取"></a>2.1 数据集获取</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>datasets <span class="token keyword">import</span> load_breast_cancer
+<span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd 
+
+breast_dataset <span class="token operator">=</span> load_breast_cancer<span class="token punctuation">(</span><span class="token punctuation">)</span>
+breast <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>breast_dataset<span class="token punctuation">.</span>data<span class="token punctuation">,</span> columns<span class="token operator">=</span>breast_dataset<span class="token punctuation">.</span>feature_names<span class="token punctuation">)</span>
+breast<span class="token punctuation">[</span><span class="token string">'y'</span><span class="token punctuation">]</span> <span class="token operator">=</span> breast_dataset<span class="token punctuation">.</span>target
+breast<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="2-2-横向联邦数据集切分"><a href="#2-2-横向联邦数据集切分" class="headerlink" title="2.2 横向联邦数据集切分"></a>2.2 横向联邦数据集切分</h3><p>为了模拟横向联邦建模的场景，我们首先在本地将乳腺癌数据集切分为<strong>特征相同的横向联邦形式</strong>，当前的breast数据集有569条样本，我们将前面的<strong>469条作为训练样本</strong>，后面的<strong>100条</strong>作为评估<strong>测试样本</strong>。</p>
+<ul>
+<li>从469条训练样本中，选取前200条作为公司A的本地数据，保存为breast_1_train.csv，将剩余的269条数据作为公司B的本地数据，保存为breast_2_train.csv。</li>
+<li>测试数据集可以不需要切分，两个参与方使用相同的一份测试数据即可，文件命名为breast_eval.csv。<pre class="line-numbers language-python" data-language="python"><code class="language-python">
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>datasets <span class="token keyword">import</span> load_breast_cancer
+<span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd 
+
+
+breast_dataset <span class="token operator">=</span> load_breast_cancer<span class="token punctuation">(</span><span class="token punctuation">)</span>
+breast <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>breast_dataset<span class="token punctuation">.</span>data<span class="token punctuation">,</span> columns<span class="token operator">=</span>breast_dataset<span class="token punctuation">.</span>feature_names<span class="token punctuation">)</span>
+breast <span class="token operator">=</span> <span class="token punctuation">(</span>breast<span class="token operator">-</span>breast<span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token punctuation">(</span>breast<span class="token punctuation">.</span>std<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> 
+col_names <span class="token operator">=</span> breast<span class="token punctuation">.</span>columns<span class="token punctuation">.</span>values<span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+columns <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token keyword">for</span> idx<span class="token punctuation">,</span> n <span class="token keyword">in</span> <span class="token builtin">enumerate</span><span class="token punctuation">(</span>col_names<span class="token punctuation">)</span><span class="token punctuation">:</span>
+	columns<span class="token punctuation">[</span>n<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"x%d"</span><span class="token operator">%</span>idx 
+	
+breast <span class="token operator">=</span> breast<span class="token punctuation">.</span>rename<span class="token punctuation">(</span>columns<span class="token operator">=</span>columns<span class="token punctuation">)</span>	
+breast<span class="token punctuation">[</span><span class="token string">'y'</span><span class="token punctuation">]</span> <span class="token operator">=</span> breast_dataset<span class="token punctuation">.</span>target
+breast<span class="token punctuation">[</span><span class="token string">'idx'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token builtin">range</span><span class="token punctuation">(</span>breast<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+idx <span class="token operator">=</span> breast<span class="token punctuation">[</span><span class="token string">'idx'</span><span class="token punctuation">]</span>
+breast<span class="token punctuation">.</span>drop<span class="token punctuation">(</span>labels<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'idx'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> axis<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> inplace <span class="token operator">=</span> <span class="token boolean">True</span><span class="token punctuation">)</span>
+
+breast<span class="token punctuation">.</span>insert<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">'idx'</span><span class="token punctuation">,</span> idx<span class="token punctuation">)</span>
+breast <span class="token operator">=</span> breast<span class="token punctuation">.</span>sample<span class="token punctuation">(</span>frac<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+train <span class="token operator">=</span> breast<span class="token punctuation">.</span>iloc<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">469</span><span class="token punctuation">]</span>
+<span class="token builtin">eval</span> <span class="token operator">=</span> breast<span class="token punctuation">.</span>iloc<span class="token punctuation">[</span><span class="token number">469</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+breast_1_train <span class="token operator">=</span> train<span class="token punctuation">.</span>iloc<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">200</span><span class="token punctuation">]</span>
+breast_1_train<span class="token punctuation">.</span>to_csv<span class="token punctuation">(</span><span class="token string">'breast_1_train.csv'</span><span class="token punctuation">,</span> index<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> header<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+
+
+breast_2_train <span class="token operator">=</span> train<span class="token punctuation">.</span>iloc<span class="token punctuation">[</span><span class="token number">200</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+breast_2_train<span class="token punctuation">.</span>to_csv<span class="token punctuation">(</span><span class="token string">'breast_2_train.csv'</span><span class="token punctuation">,</span> index<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> header<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+<span class="token builtin">eval</span><span class="token punctuation">.</span>to_csv<span class="token punctuation">(</span><span class="token string">'breast_eval.csv'</span><span class="token punctuation">,</span> index<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> header<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+运行完此程序之后会得到三个新的scv格式的数据集</li>
+</ul>
+<h3 id="2-3-上传数据-修改文件"><a href="#2-3-上传数据-修改文件" class="headerlink" title="2.3 上传数据-修改文件"></a>2.3 上传数据-修改文件</h3><p>在数据处理完之后，我们需要进行对<strong>数据进行上传</strong>。我们采用<strong>json格式进行上传</strong>。在FATE项目中有写好的上传json文件，在<strong>examples/dsl/v2/upload</strong>文件夹中，<strong>upload_conf.json</strong>此文件。在我的实验中，我将此文件复制到了我在FATE目录下新建的工作目录下，并对其进行了修改。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token punctuation">{</span>
+    <span class="token string">"file"</span><span class="token punctuation">:</span> <span class="token string">"examples/data/breast_1_train.csv"</span><span class="token punctuation">,</span><span class="token comment">#指定数据文件</span>
+    <span class="token string">"head"</span><span class="token punctuation">:</span><span class="token number">1</span><span class="token punctuation">,</span>
+    <span class="token string">"partition"</span><span class="token punctuation">:</span> <span class="token number">10</span><span class="token punctuation">,</span>
+    <span class="token string">"work_mode"</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+    <span class="token string">"table_name"</span><span class="token punctuation">:</span> <span class="token string">"homo_breast_1_train"</span><span class="token punctuation">,</span><span class="token comment">#指定DTable表名</span>
+    <span class="token string">"namespace"</span><span class="token punctuation">:</span> <span class="token string">"breast_1_train.csv"</span> <span class="token comment">#指定DTable表名的命名空间</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>“file”：需要改为自己的csv路径<br>“work_model”:0 表示为单机部署模式<br> “table_name”:需要改为自己的table名</p>
+<h3 id="2-4-上传数据-跳转目录"><a href="#2-4-上传数据-跳转目录" class="headerlink" title="2.4 上传数据-跳转目录"></a>2.4 上传数据-跳转目录</h3><p> 为了方便后面的叙述统一，我们假设读者安装的FATE单机版本目录为：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">fate_dir<span class="token operator">=</span><span class="token operator">/</span>data<span class="token operator">/</span>projects<span class="token operator">/</span>fate<span class="token operator">-</span><span class="token number">1.8</span><span class="token number">.0</span><span class="token operator">-</span>experiment<span class="token operator">/</span>standalone<span class="token operator">-</span>fate<span class="token operator">-</span>master<span class="token operator">-</span><span class="token number">1.8</span><span class="token number">.0</span><span class="token operator">/</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p> 做完上述准备之后，我们需要进行以下操作</p>
+<ol>
+<li>跳转到standalone-fate-master-1.8.0目录下<pre class="line-numbers language-linux" data-language="linux"><code class="language-linux">cd /data/projects/fate-1.8.0-experiment/standalone-fate-master-1.8.0<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>加载环境变量<pre class="line-numbers language-linux" data-language="linux"><code class="language-linux">source bin/init_env.sh	<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>在加载环境变量的基础上，在在当前目录下（$fate_dir/examples/federatedml-1.x-examples），在命令行中执行下面的命令，即可自动完成上传和格式转换：<pre class="line-numbers language-linux" data-language="linux"><code class="language-linux">python /opt/standalone_fate_install_1.8.0/fateflow/python/fate_flow/fate_flow_client.py -f upload -c /opt/standalone_fate_install_1.8.0/fate/upload_data/upload_train1.json<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+或者<pre class="line-numbers language-linux" data-language="linux"><code class="language-linux">flow data upload -c /opt/standalone_fate_install_1.8.0/fate/upload_data/upload_train1.json<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+出现如下界面说明成功：<br><img src="https://img-blog.csdnimg.cn/c8c9527e86424ab0845f77fa5fd7867d.png" alt="成功截图"></li>
+</ol>
+<h3 id="2-5-模型训练与评估"><a href="#2-5-模型训练与评估" class="headerlink" title="2.5 模型训练与评估"></a>2.5 模型训练与评估</h3><p>在<strong>数据完成上传</strong>之后，下面需要<strong>对训练任务进行配置</strong>，在FATE项目中已经给出了很多写好的配置，我们可以在此基础上进行修改就能直接用了。</p>
+<h4 id="2-5-1-修改conf和dsl文件参数"><a href="#2-5-1-修改conf和dsl文件参数" class="headerlink" title="2.5.1 修改conf和dsl文件参数"></a>2.5.1 修改conf和dsl文件参数</h4><p>书中的版本与v1.8.0完全发生了改变，我们需要重新配置dsl和conf文件，且书中是<strong>使用训练集建模</strong>，<strong>训练集评估，与建模流程不符</strong>，我们改变书中流程，使用<strong>训练集建模</strong>，<strong>训练集与测试集分开进行评估</strong>。</p>
+<p>在这里我使用的是<strong>homo_lr_train_conf.json和homo_lr_train_dsl.json</strong>，这两个文件在<strong>examples/dsl/v2/homo_logistic_regression</strong>目录中能够找到。接下来我们需要对其进行修改</p>
+<ol>
+<li><strong>homo_lr_train_conf.json</strong>：用来设置各个组件的参数，比如输入模块的数据表名，算法模块的学习率，batch大小，迭代次数。<br>一般使用默认值即可，需要修改的地方包括以下几处。</li>
+</ol>
+<ul>
+<li><strong>role字段</strong>：该字段包括guest和host分别对应两个参与方。需要修改三个参数。首先是name和namespace，代表训练数据的DTable表名和命名空间；此外，label_name表示的是标签列对应的属性名，<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token punctuation">{</span>
+    
+        <span class="token string">"role"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+            <span class="token string">"host"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                <span class="token string">"0"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                    <span class="token string">"reader_0"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                        <span class="token string">"table"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                            <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"mnist_host_train"</span><span class="token punctuation">,</span>  <span class="token comment">#注意此处换成对应的表名，在复制此代码时需要删除此注释</span>
+                            <span class="token string">"namespace"</span><span class="token punctuation">:</span> <span class="token string">"experiment"</span>
+                        <span class="token punctuation">}</span>
+                    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+                    <span class="token string">"evaluation_0"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                        <span class="token string">"need_run"</span><span class="token punctuation">:</span> false
+                    <span class="token punctuation">}</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token string">"guest"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                <span class="token string">"0"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                    <span class="token string">"reader_0"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                        <span class="token string">"table"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                            <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"mnist_guest_train"</span><span class="token punctuation">,</span><span class="token comment">#注意此处换成对应的表名，在复制此代码时需要删除此注释</span>
+                            <span class="token string">"namespace"</span><span class="token punctuation">:</span> <span class="token string">"experiment"</span>
+                        <span class="token punctuation">}</span>
+                    <span class="token punctuation">}</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><strong>component_parameters</strong>字段：用来设置模型训练的超参数信息，包括优化函数与学习率，迭代次数<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token string">"component_parameters"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        <span class="token string">"common"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+            <span class="token string">"data_transform_0"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                <span class="token string">"with_label"</span><span class="token punctuation">:</span> true<span class="token punctuation">,</span>
+                <span class="token string">"output_format"</span><span class="token punctuation">:</span> <span class="token string">"dense"</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token string">"homo_lr_0"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                <span class="token string">"penalty"</span><span class="token punctuation">:</span> <span class="token string">"L2"</span><span class="token punctuation">,</span>
+                <span class="token string">"tol"</span><span class="token punctuation">:</span> <span class="token number">1e-05</span><span class="token punctuation">,</span>
+                <span class="token string">"alpha"</span><span class="token punctuation">:</span> <span class="token number">0.01</span><span class="token punctuation">,</span>
+                <span class="token string">"optimizer"</span><span class="token punctuation">:</span> <span class="token string">"sgd"</span><span class="token punctuation">,</span>
+                <span class="token string">"batch_size"</span><span class="token punctuation">:</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span>
+                <span class="token string">"learning_rate"</span><span class="token punctuation">:</span> <span class="token number">0.15</span><span class="token punctuation">,</span>
+                <span class="token string">"init_param"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                    <span class="token string">"init_method"</span><span class="token punctuation">:</span> <span class="token string">"zeros"</span>
+                <span class="token punctuation">}</span><span class="token punctuation">,</span>
+                <span class="token string">"max_iter"</span><span class="token punctuation">:</span> <span class="token number">30</span><span class="token punctuation">,</span>
+                <span class="token string">"early_stop"</span><span class="token punctuation">:</span> <span class="token string">"diff"</span><span class="token punctuation">,</span>
+                <span class="token string">"encrypt_param"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                    <span class="token string">"method"</span><span class="token punctuation">:</span> null
+                <span class="token punctuation">}</span><span class="token punctuation">,</span>
+                <span class="token string">"cv_param"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                    <span class="token string">"n_splits"</span><span class="token punctuation">:</span> <span class="token number">4</span><span class="token punctuation">,</span>
+                    <span class="token string">"shuffle"</span><span class="token punctuation">:</span> true<span class="token punctuation">,</span>
+                    <span class="token string">"random_seed"</span><span class="token punctuation">:</span> <span class="token number">33</span><span class="token punctuation">,</span>
+                    <span class="token string">"need_cv"</span><span class="token punctuation">:</span> false
+                <span class="token punctuation">}</span><span class="token punctuation">,</span>
+                <span class="token string">"decay"</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+                <span class="token string">"decay_sqrt"</span><span class="token punctuation">:</span> true
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token string">"evaluation_0"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                <span class="token string">"eval_type"</span><span class="token punctuation">:</span> <span class="token string">"binary"</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<ol start="2">
+<li>homo_lr_train_dsl.json：用来描述任务模块，将任务模块以有向无环图的形式组合在一起。以下组件模块构成了最基本的横向联邦模型流水线。</li>
+</ol>
+<ul>
+<li>homo_lr_0：横向逻辑回归组件</li>
+<li>evaluation_0:模型评估组件，如果没有提供测试数据集，将自动使用训练数据进行模型评估。</li>
+</ul>
+<h4 id="2-5-2-修改结束之后，在命令行输入以下命令（submit-job）执行模型训练"><a href="#2-5-2-修改结束之后，在命令行输入以下命令（submit-job）执行模型训练" class="headerlink" title="2.5.2 修改结束之后，在命令行输入以下命令（submit_ job）执行模型训练"></a>2.5.2 修改结束之后，在命令行输入以下命令（submit_ job）执行模型训练</h4><pre class="line-numbers language-linux" data-language="linux"><code class="language-linux">python /opt/standalone_fate_install_1.8.0/fateflow/python/fate_flow/fate_flow_client.py -f submit_job -d /opt/standalone_fate_install_1.8.0/fate/dsl_conf/homo_lr_train_dsl.json -c /opt/standalone_fate_install_1.8.0/fate/dsl_conf/homo_lr_train_conf.json<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>或者</p>
+<pre class="line-numbers language-linux" data-language="linux"><code class="language-linux">flow job submit -d /opt/standalone_fate_install_1.8.0/fate/dsl_conf/homo_lr_train_dsl.json -c /opt/standalone_fate_install_1.8.0/fate/dsl_conf/homo_lr_train_conf.json<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>成功后显示如图<br><img src="https://img-blog.csdnimg.cn/8e5a0116c1b1438c994b60d659e614da.png" alt="截图"><br>通过箭头所指地址我们可以在浏览器中查看任务进度和信息<br><img src="https://img-blog.csdnimg.cn/74dffdbcb283421488ef873b70e7b73e.png" alt="截图成功"></p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">乔彬</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://qiaobin1.github.io/2023/03/23/2023-nian-3-yue-ban-lian-bang-xue-xi-fate-cong-zhu-ji-an-zhuang-dao-shi-xian-lian-bang-xue-xi/">https://qiaobin1.github.io/2023/03/23/2023-nian-3-yue-ban-lian-bang-xue-xi-fate-cong-zhu-ji-an-zhuang-dao-shi-xian-lian-bang-xue-xi/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">乔彬</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0/">
+                                    <span class="chip bg-color">联邦学习</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="qq,qzone,wechat,weibo,douban" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2023/03/23/phm2012-gun-dong-zhou-cheng-quan-shou-ming-shu-ju-chu-li-shu-ju-dai-ma/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="PHM2012滚动轴承全寿命数据处理数据代码">
+                        
+                        <span class="card-title">PHM2012滚动轴承全寿命数据处理数据代码</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            PHM2012滚动轴承全寿命数据处理数据代码
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2023-03-23
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category">
+                                    深度学习
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/">
+                        <span class="chip bg-color">数据分析</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">
+                        <span class="chip bg-color">数据挖掘</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2023/03/23/ieee-phm-2012-tiao-zhan-sai-de-shi-yan-shu-ju-ji/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="IEEE PHM 2012挑战赛的实验数据集">
+                        
+                        <span class="card-title">IEEE PHM 2012挑战赛的实验数据集</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            IEEE PHM 2012挑战赛的实验数据集
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-03-23
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category">
+                                    深度学习
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/">
+                        <span class="chip bg-color">数据分析</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">
+                        <span class="chip bg-color">数据挖掘</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: Blog<br />'
+            + '文章作者: qiaobin<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="26467411"
+                   fixed='true'
+                   autoplay='true'
+                   theme='#42b983'
+                   loop='all'
+                   order='list'
+                   preload='auto'
+                   volume='0.5'
+                   list-folded='false'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="/libs/aplayer/Meting.min.js"></script>
+
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2023-2024</span>
+            
+            <a href="/about" target="_blank">qiaobin</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            
+            <br>
+            
+            
+            
+            
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link ">
+
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2540580057" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2540580057" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
