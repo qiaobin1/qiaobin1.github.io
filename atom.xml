@@ -425,34 +425,6 @@
   </entry>
   
   <entry>
-    <title>linux_实操篇</title>
-    <link href="https://qiaobin1.github.io/2023/03/23/linux-shi-cao-pian/"/>
-    <id>https://qiaobin1.github.io/2023/03/23/linux-shi-cao-pian/</id>
-    <published>2023-03-23T01:25:00.000Z</published>
-    <updated>2023-03-23T13:04:06.590Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;@[toc](linux_实操篇]&lt;/p&gt;
-&lt;h2 id=&quot;六、Linux远程登录&quot;&gt;&lt;a href=&quot;#六、Linux远程登录&quot; class=&quot;headerlink&quot; title=&quot;六、Linux远程登录&quot;&gt;&lt;/a&gt;六、Linux远程登录&lt;/h2&gt;&lt;h3</summary>
-        
-      
-    
-    
-    
-    <category term="嵌入式" scheme="https://qiaobin1.github.io/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/"/>
-    
-    
-    <category term="linux" scheme="https://qiaobin1.github.io/tags/linux/"/>
-    
-    <category term="vim" scheme="https://qiaobin1.github.io/tags/vim/"/>
-    
-  </entry>
-  
-  <entry>
     <title>git 版本管理</title>
     <link href="https://qiaobin1.github.io/2023/03/23/git-ban-ben-guan-li/"/>
     <id>https://qiaobin1.github.io/2023/03/23/git-ban-ben-guan-li/</id>
@@ -502,6 +474,34 @@
     <category term="linux" scheme="https://qiaobin1.github.io/tags/linux/"/>
     
     <category term="嵌入式开发" scheme="https://qiaobin1.github.io/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%BC%80%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux_实操篇</title>
+    <link href="https://qiaobin1.github.io/2023/03/23/linux-shi-cao-pian/"/>
+    <id>https://qiaobin1.github.io/2023/03/23/linux-shi-cao-pian/</id>
+    <published>2023-03-23T01:25:00.000Z</published>
+    <updated>2023-03-23T13:04:06.590Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;@[toc](linux_实操篇]&lt;/p&gt;
+&lt;h2 id=&quot;六、Linux远程登录&quot;&gt;&lt;a href=&quot;#六、Linux远程登录&quot; class=&quot;headerlink&quot; title=&quot;六、Linux远程登录&quot;&gt;&lt;/a&gt;六、Linux远程登录&lt;/h2&gt;&lt;h3</summary>
+        
+      
+    
+    
+    
+    <category term="嵌入式" scheme="https://qiaobin1.github.io/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/"/>
+    
+    
+    <category term="linux" scheme="https://qiaobin1.github.io/tags/linux/"/>
+    
+    <category term="vim" scheme="https://qiaobin1.github.io/tags/vim/"/>
     
   </entry>
   
